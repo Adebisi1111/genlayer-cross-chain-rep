@@ -34,11 +34,11 @@ class ReputationBridge(gl.Contract):
 
     @gl.public.write
     def authorizeSnapshotter(self, snapshotter: str) -> None:
-        self.authorized_snapshotters[snapshotter] = "1"
+        self.authorized_snapshotters[snapshotter.lower()] = "1"
 
     @gl.public.write
     def submitSnapshot(self, merkle_root: str, block_number: u256) -> None:
-        sender = gl.message.sender_address.as_hex
+        sender = gl.message.sender_address.as_hex.lower()
         if self.authorized_snapshotters.get(sender, "") != "1":
             raise Exception("Not an authorized snapshotter.")
         self.latest_snapshot_id += u256(1)
